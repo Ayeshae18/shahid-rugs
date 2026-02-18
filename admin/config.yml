@@ -5,368 +5,225 @@ backend:
 media_folder: images
 public_folder: /images
 
-locale: en
-
 publish_mode: editorial_workflow
 
-site_url: https://your-shahid-rugs-site.com
-display_url: https://your-shahid-rugs-site.com
-logo_url: /images/logo.png
-
 collections:
-
-  # ============================================================
-  # RUGS COLLECTION
-  # Matches the 16-product structure in shahid-rugs.html exactly.
-  # Supports adding images, editing existing products, and
-  # creating new products in any of the four categories.
-  # ============================================================
-
   - name: rugs
     label: Rugs
     label_singular: Rug
     folder: content/rugs
     create: true
-    slug: "{{fields.category}}-{{slug}}"
-    summary: "{{fields.category}} — {{title}} (from ${{fields.price_5x8}})"
-    sortable_fields:
-      - title
-      - fields.category
-      - fields.price_5x8
-    view_groups:
-      - label: Category
-        field: category
-        pattern: Traditional|Modern|Vintage|Tribal
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{fields.category}} — {{title}}"
     view_filters:
       - label: Traditional
         field: category
-        value: Traditional
+        pattern: "Traditional"
       - label: Modern
         field: category
-        value: Modern
+        pattern: "Modern"
       - label: Vintage
         field: category
-        value: Vintage
+        pattern: "Vintage"
       - label: Tribal
         field: category
-        value: Tribal
-
+        pattern: "Tribal"
     fields:
-
-      # ── CORE IDENTITY ────────────────────────────────────────
-
-      - label: "Product Name"
+      - label: Product Name
         name: title
         widget: string
-        hint: "e.g. Isfahan Medallion — this appears as the heading on the product page."
 
-      - label: "Category"
+      - label: Category
         name: category
         widget: select
         options:
-          - { label: "Traditional", value: Traditional }
-          - { label: "Modern",      value: Modern      }
-          - { label: "Vintage",     value: Vintage     }
-          - { label: "Tribal",      value: Tribal      }
-        hint: "Choose one of the four collections."
+          - Traditional
+          - Modern
+          - Vintage
+          - Tribal
 
-      - label: "Badge / Label"
+      - label: Badge
         name: badge
         widget: select
         required: false
-        options:
-          - { label: "None",       value: ""          }
-          - { label: "Bestseller", value: Bestseller   }
-          - { label: "New",        value: New          }
-          - { label: "Limited",    value: Limited      }
-          - { label: "Rare",       value: Rare         }
         default: ""
-        hint: "Optional badge shown on the product card (top-left corner)."
+        options:
+          - label: None
+            value: ""
+          - label: Bestseller
+            value: Bestseller
+          - label: New
+            value: New
+          - label: Limited
+            value: Limited
+          - label: Rare
+            value: Rare
 
-      - label: "Short Description"
+      - label: Description
         name: description
         widget: text
-        hint: "2–4 sentences shown in the product detail accordion. Describe craftsmanship, origin, and character."
 
-      # ── PRODUCT IMAGES ───────────────────────────────────────
-      # Five gallery images per product — the first is the main
-      # hero image; the other four populate the thumbnail strip.
-
-      - label: "Gallery Images (up to 5)"
+      - label: Gallery Images
         name: gallery
         widget: list
-        label_singular: "Image"
         min: 1
         max: 5
-        summary: "{{fields.alt}}"
-        hint: "Upload up to 5 images. The FIRST image is the main display image. The rest fill the thumbnail strip."
         fields:
-          - label: "Image File"
+          - label: Image
             name: image
             widget: image
             media_folder: /images/rugs
             public_folder: /images/rugs
-            hint: "High-res JPG or WebP recommended. Ideal ratio 4:5 (portrait)."
-          - label: "Alt Text"
+          - label: Alt Text
             name: alt
             widget: string
-            hint: "Describe the image for accessibility, e.g. 'Isfahan Medallion in ruby red, 8x10'."
+            required: false
 
-      # ── COLOUR SWATCHES ──────────────────────────────────────
-      # Up to 3 swatches. Each swatch can link to a specific
-      # gallery image index so clicking the swatch swaps the
-      # main image (matches the JS logic in shahid-rugs.html).
-
-      - label: "Colour Swatches"
+      - label: Colour Swatches
         name: colors
         widget: list
-        label_singular: "Colour"
         min: 1
         max: 3
-        summary: "{{fields.name}} — {{fields.hex}}"
-        hint: "Define up to 3 colour variants. Each can point to a gallery image by index (0 = first image)."
         fields:
-          - label: "Colour Name"
+          - label: Colour Name
             name: name
             widget: string
-            hint: "e.g. Ruby Red, Midnight Blue, Forest Ivory"
-          - label: "Hex Code"
+          - label: Hex Code
             name: hex
             widget: string
-            pattern:
-              - "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-              - "Must be a valid hex colour code, e.g. #8B1A1A"
-            hint: "Paste a hex colour code — this fills the swatch circle in the UI."
-          - label: "Gallery Image Index"
+          - label: Gallery Image Index
             name: image_index
             widget: number
             value_type: int
             min: 0
             max: 4
             default: 0
-            hint: "Which gallery image to show when this swatch is clicked? 0 = first image."
 
-      # ── PRICING ──────────────────────────────────────────────
-      # Matches the four size options in the shahid-rugs.html
-      # size dropdown exactly. Prices are in USD.
+      - label: Price 5x8 (USD)
+        name: price_5x8
+        widget: number
+        value_type: float
+        min: 0
 
-      - label: "Pricing"
-        name: pricing
-        widget: object
-        collapsed: false
-        hint: "Set a price for each standard size. Leave custom_note for bespoke orders."
-        fields:
-          - label: "5′ × 8′ Price (USD)"
-            name: price_5x8
-            widget: number
-            value_type: float
-            min: 0
-            hint: "Standard size — lowest price shown on product cards."
-          - label: "8′ × 10′ Price (USD)"
-            name: price_8x10
-            widget: number
-            value_type: float
-            min: 0
-          - label: "9′ × 12′ Price (USD)"
-            name: price_9x12
-            widget: number
-            value_type: float
-            min: 0
-          - label: "Custom Size Available?"
-            name: custom_available
-            widget: boolean
-            default: true
-            hint: "If true, a 'Custom Size — Inquire' option appears in the size dropdown."
-          - label: "Custom Size Note"
-            name: custom_note
-            widget: string
-            required: false
-            default: "Contact us for custom sizing"
-            hint: "Short message shown when the customer selects Custom Size."
+      - label: Price 8x10 (USD)
+        name: price_8x10
+        widget: number
+        value_type: float
+        min: 0
 
-      # ── PRODUCT DETAILS ──────────────────────────────────────
+      - label: Price 9x12 (USD)
+        name: price_9x12
+        widget: number
+        value_type: float
+        min: 0
 
-      - label: "Materials"
+      - label: Custom Size Available
+        name: custom_available
+        widget: boolean
+        default: true
+
+      - label: Weave Technique
+        name: technique
+        widget: select
+        default: Hand-Knotted
+        options:
+          - Hand-Knotted
+          - Hand-Tufted
+          - Flat-Weave
+          - Hand-Woven
+
+      - label: Materials
         name: materials
         widget: string
         default: "100% hand-spun wool with natural vegetable dyes"
-        hint: "e.g. 100% hand-spun wool, silk highlights, organic dyes. Appears in the Materials & Care accordion."
 
-      - label: "Pile Height"
-        name: pile_height
-        widget: string
-        required: false
-        default: "8–12mm"
-        hint: "e.g. 8–12mm. Shown in product details."
-
-      - label: "Knot Density (knots per sq inch)"
-        name: knot_density
-        widget: string
-        required: false
-        hint: "e.g. 160 KPSI. Optional — leave blank to hide this field."
-
-      - label: "Weave Technique"
-        name: technique
-        widget: select
-        options:
-          - { label: "Hand-Knotted",    value: Hand-Knotted    }
-          - { label: "Hand-Tufted",     value: Hand-Tufted     }
-          - { label: "Flat-Weave / Kilim", value: Flat-Weave   }
-          - { label: "Hand-Woven",      value: Hand-Woven      }
-        default: Hand-Knotted
-
-      - label: "Origin / Region"
+      - label: Origin
         name: origin
         widget: string
         required: false
-        hint: "e.g. Lahore, Pakistan · Kunduz Province, Afghanistan"
 
-      - label: "Care Instructions"
+      - label: Care Instructions
         name: care
         widget: text
         required: false
-        default: "Gently vacuum on low suction weekly. Rotate annually for even wear. Professional cleaning recommended every 2–3 years."
-        hint: "Shown in the Materials & Care accordion on the product page."
+        default: "Gently vacuum on low suction weekly. Rotate annually. Professional cleaning every 2-3 years."
 
-      # ── SHIPPING & META ──────────────────────────────────────
-
-      - label: "Shipping Note"
-        name: shipping_note
-        widget: string
-        required: false
-        default: "Free worldwide shipping via DHL Express (5–10 business days). Fully insured."
-
-      - label: "Certificate of Authenticity"
-        name: certificate
-        widget: boolean
-        default: true
-        hint: "Toggle on if this product ships with a certificate of authenticity."
-
-      - label: "Featured on Homepage?"
+      - label: Featured on Homepage
         name: featured
         widget: boolean
         default: false
-        hint: "If true, this product may appear in the Homepage Featured Pieces section."
 
-      - label: "In Stock?"
+      - label: In Stock
         name: in_stock
         widget: boolean
         default: true
 
-      - label: "SKU"
+      - label: SKU
         name: sku
         widget: string
         required: false
-        hint: "Optional internal product code, e.g. SR-TRAD-001."
-
-      - label: "SEO Meta Description"
-        name: seo_description
-        widget: text
-        required: false
-        hint: "Optional — 1–2 sentences for search engines. If blank, the product description is used."
-
-  # ============================================================
-  # SITE SETTINGS — hero text, value props, WhatsApp number etc.
-  # Stored as a single settings file, not a folder of documents.
-  # ============================================================
 
   - name: settings
     label: Site Settings
     files:
-
-      - label: "General Settings"
+      - label: General
         name: general
         file: content/settings/general.yml
         fields:
-          - label: "Site Title"
+          - label: Site Title
             name: site_title
             widget: string
-            default: "Shahid Rugs"
-          - label: "Tagline"
-            name: tagline
-            widget: string
-            default: "Artisan Rugs for Generations"
-          - label: "WhatsApp Number (with country code, no +)"
+            default: Shahid Rugs
+          - label: WhatsApp Number
             name: whatsapp_number
             widget: string
             default: "923001234567"
-            hint: "e.g. 923001234567 — used in all product 'Inquire on WhatsApp' buttons."
-          - label: "PayPal Business Email"
+            hint: "Include country code, no + sign. e.g. 923001234567"
+          - label: PayPal Business Email
             name: paypal_email
             widget: string
             default: "payments@shahidrugs.com"
-          - label: "Contact Email"
+          - label: Contact Email
             name: contact_email
             widget: string
             default: "hello@shahidrugs.com"
-          - label: "Contact Phone"
+          - label: Contact Phone
             name: contact_phone
             widget: string
             default: "+92 300 123 4567"
-          - label: "Address"
+          - label: Address
             name: address
             widget: text
             default: "14 Gulberg III, Lahore, Punjab 54000, Pakistan"
 
-      - label: "Homepage Hero"
+      - label: Homepage Hero
         name: hero
         file: content/settings/hero.yml
         fields:
-          - label: "Hero Heading Line 1"
-            name: heading_line1
-            widget: string
-            default: "Artisan Rugs"
-          - label: "Hero Heading Line 2 (italic, gold)"
-            name: heading_line2
-            widget: string
-            default: "for Generations"
-          - label: "Hero Subheading"
-            name: subheading
-            widget: text
-            default: "Each rug tells a story — hand-knotted by master weavers using centuries-old techniques and the finest natural wools."
-          - label: "Hero Label (small top text)"
+          - label: Hero Label
             name: label
             widget: string
             default: "Handcrafted Since 1978"
-          - label: "CTA Button Text"
+          - label: Heading Line 1
+            name: heading_line1
+            widget: string
+            default: "Artisan Rugs"
+          - label: Heading Line 2
+            name: heading_line2
+            widget: string
+            default: "for Generations"
+          - label: Subheading
+            name: subheading
+            widget: text
+            default: "Each rug tells a story — hand-knotted by master weavers using centuries-old techniques and the finest natural wools."
+          - label: CTA Button Text
             name: cta_text
             widget: string
             default: "Shop Collection"
-          - label: "Hero Background Image"
+          - label: Hero Background Image
             name: bg_image
             widget: image
             required: false
             media_folder: /images/hero
             public_folder: /images/hero
-            hint: "Full-screen background. Min 1920×1080px recommended."
-
-      - label: "About Page"
-        name: about
-        file: content/settings/about.yml
-        fields:
-          - label: "Founding Year"
-            name: founding_year
-            widget: string
-            default: "1978"
-          - label: "Number of Artisan Families"
-            name: artisan_count
-            widget: string
-            default: "200+"
-          - label: "About Intro Paragraph"
-            name: intro
-            widget: text
-            default: "Founded by master weaver Shahid Karim in 1978, our atelier began with a simple belief: that a rug should outlast its owner and tell a story across generations."
-          - label: "Founder Quote"
-            name: quote
-            widget: string
-            default: "A rug is not just a floor covering — it is a living record of culture, skill, and devotion."
-          - label: "Founder Name"
-            name: founder_name
-            widget: string
-            default: "Shahid Karim"
-          - label: "Founder Image"
-            name: founder_image
-            widget: image
-            required: false
-            media_folder: /images/team
-            public_folder: /images/team
