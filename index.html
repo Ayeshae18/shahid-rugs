@@ -1,12 +1,2360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Business</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shahid Rugs — Artisan Rugs for Generations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --cream: #F5F0E8;
+  --cream-dark: #EDE6D6;
+  --walnut: #5C3D2E;
+  --walnut-light: #7A5241;
+  --walnut-dark: #3E2820;
+  --charcoal: #2C2C2C;
+  --charcoal-light: #555;
+  --gold: #C9A96E;
+  --gold-light: #E2C99A;
+  --white: #FFFFFF;
+  --shadow: 0 4px 30px rgba(44,44,44,0.12);
+  --shadow-lg: 0 12px 60px rgba(44,44,44,0.18);
+  --radius: 2px;
+  --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  overflow-x: hidden;
+  cursor: default;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+button { font-family: 'Poppins', sans-serif; cursor: pointer; border: none; outline: none; }
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--walnut-light); border-radius: 3px; }
+
+/* ===== NAV ===== */
+#navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 60px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition);
+  background: transparent;
+}
+#navbar.scrolled {
+  background: rgba(245,240,232,0.97);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 20px rgba(44,44,44,0.08);
+  height: 70px;
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  transition: var(--transition);
+}
+#navbar.scrolled .nav-logo { color: var(--walnut-dark); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.nav-item { position: relative; }
+.nav-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  transition: var(--transition);
+  padding-bottom: 4px;
+}
+#navbar.scrolled .nav-link { color: var(--charcoal); }
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: var(--transition);
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+/* Mega Menu */
+.mega-menu {
+  position: absolute;
+  top: calc(100% + 20px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 160px);
+  gap: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+  border-top: 2px solid var(--gold);
+  min-width: 680px;
+}
+.nav-item:hover .mega-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+.mega-col-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--walnut);
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--cream-dark);
+}
+.mega-link {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--charcoal-light);
+  padding: 4px 0;
+  transition: var(--transition);
+}
+.mega-link:hover { color: var(--walnut); padding-left: 4px; }
+
+/* Cart Icon */
+.nav-cart {
+  position: relative;
+  background: none;
+  color: rgba(255,255,255,0.9);
+  font-size: 1.2rem;
+  padding: 8px;
+  transition: var(--transition);
+}
+#navbar.scrolled .nav-cart { color: var(--charcoal); }
+.cart-count {
+  position: absolute;
+  top: 0; right: 0;
+  background: var(--gold);
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 600;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transform: scale(0);
+  transition: transform 0.2s;
+}
+.cart-count.has-items { transform: scale(1); }
+
+/* Mobile Nav Toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  padding: 8px;
+}
+.nav-toggle span {
+  display: block;
+  width: 22px; height: 1.5px;
+  background: var(--white);
+  transition: var(--transition);
+}
+#navbar.scrolled .nav-toggle span { background: var(--charcoal); }
+
+/* ===== PAGES ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== HERO ===== */
+#hero {
+  height: 100vh;
+  min-height: 700px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(135deg, rgba(62,40,32,0.75) 0%, rgba(44,44,44,0.5) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='900' viewBox='0 0 800 900'%3E%3Cdefs%3E%3CradialGradient id='rg' cx='40%25' cy='45%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%23C9956E'/%3E%3Cstop offset='35%25' stop-color='%238B5E3C'/%3E%3Cstop offset='70%25' stop-color='%235C3D2E'/%3E%3Cstop offset='100%25' stop-color='%232C1810'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='800' height='900' fill='url(%23rg)'/%3E%3C!-- Rug pattern overlay --%3E%3Cg opacity='0.15'%3E%3Crect x='60' y='60' width='680' height='780' fill='none' stroke='%23F5F0E8' stroke-width='3'/%3E%3Crect x='90' y='90' width='620' height='720' fill='none' stroke='%23C9A96E' stroke-width='1.5'/%3E%3Crect x='120' y='120' width='560' height='660' fill='none' stroke='%23F5F0E8' stroke-width='1'/%3E%3Cellipse cx='400' cy='450' rx='200' ry='240' fill='none' stroke='%23C9A96E' stroke-width='2'/%3E%3Cellipse cx='400' cy='450' rx='150' ry='180' fill='none' stroke='%23F5F0E8' stroke-width='1'/%3E%3Ccircle cx='400' cy='450' r='60' fill='none' stroke='%23C9A96E' stroke-width='2'/%3E%3Ccircle cx='400' cy='450' r='20' fill='%23C9A96E' opacity='0.5'/%3E%3Cline x1='60' y1='450' x2='740' y2='450' stroke='%23F5F0E8' stroke-width='0.5'/%3E%3Cline x1='400' y1='60' x2='400' y2='840' stroke='%23F5F0E8' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;
+  transform: scale(1.05);
+  transition: transform 0.1s linear;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 60px;
+  max-width: 680px;
+}
+.hero-label {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 24px;
+  padding: 8px 16px;
+  border: 1px solid rgba(201,169,110,0.4);
+}
+.hero-title {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.08;
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.hero-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.75);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  max-width: 440px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--walnut);
+  color: var(--white);
+  padding: 16px 36px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  border: 1px solid var(--walnut);
+}
+.btn-primary:hover {
+  background: var(--walnut-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(92,61,46,0.35);
+}
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--walnut);
+  padding: 14px 32px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--walnut);
+  transition: var(--transition);
+}
+.btn-outline:hover {
+  background: var(--walnut);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: bounce 2s infinite;
+}
+.hero-scroll-line {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ===== MARQUEE ===== */
+.marquee-strip {
+  background: var(--walnut);
+  color: var(--gold-light);
+  padding: 14px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-inner {
+  display: inline-flex;
+  animation: marquee 22s linear infinite;
+  gap: 0;
+}
+.marquee-item {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0 40px;
+}
+.marquee-dot {
+  color: var(--gold);
+  font-size: 0.5rem;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ===== FEATURED CATEGORIES ===== */
+.section { padding: 100px 60px; }
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 600;
+  color: var(--walnut-dark);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.section-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, var(--gold), var(--gold-light));
+  margin: 0 auto 20px;
+}
+.section-desc {
+  max-width: 520px;
+  margin: 0 auto;
+  color: var(--charcoal-light);
+  line-height: 1.75;
+  font-size: 0.9rem;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.cat-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 3/4;
+  background: var(--walnut-dark);
+}
+.cat-card-bg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.cat-card:hover .cat-card-bg { transform: scale(1.08); }
+.cat-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(62,40,32,0.9) 0%, rgba(62,40,32,0.2) 60%, transparent 100%);
+  transition: var(--transition);
+}
+.cat-card:hover .cat-card-overlay { background: linear-gradient(to top, rgba(62,40,32,0.95) 0%, rgba(62,40,32,0.3) 60%, rgba(62,40,32,0.1) 100%); }
+.cat-card-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 28px;
+  transform: translateY(0);
+  transition: var(--transition);
+}
+.cat-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: var(--white);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.cat-card-count {
+  font-size: 0.72rem;
+  color: var(--gold-light);
+  letter-spacing: 0.12em;
+}
+.cat-card-cta {
+  margin-top: 14px;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cat-card:hover .cat-card-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Category card patterns */
+.cat-bg-traditional {
+  background: radial-gradient(ellipse at 40% 40%, #C9956E, #8B4513, #4A2010);
+}
+.cat-bg-modern {
+  background: linear-gradient(135deg, #8B9D77, #5C7355, #3A4E2E);
+}
+.cat-bg-vintage {
+  background: radial-gradient(ellipse at 60% 50%, #C4A882, #8B6F47, #5C3D2E);
+}
+.cat-bg-tribal {
+  background: linear-gradient(160deg, #A0522D, #6B2D1C, #2C1A10);
+}
+
+/* ===== FEATURED PRODUCTS ===== */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+.product-card {
+  cursor: pointer;
+  
+}
+.product-img-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  background: var(--cream-dark);
+  margin-bottom: 16px;
+}
+.product-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.product-card:hover .product-img-wrap img { transform: scale(1.06); }
+.product-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  background: var(--walnut);
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+}
+.product-badge.new { background: var(--gold); }
+.product-quick-add {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: var(--walnut-dark);
+  color: var(--white);
+  text-align: center;
+  padding: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: translateY(100%);
+  transition: var(--transition);
+}
+.product-card:hover .product-quick-add { transform: translateY(0); }
+.product-cat {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.product-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  color: var(--walnut-dark);
+  margin-bottom: 6px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.product-price {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+.product-price span {
+  font-size: 0.75rem;
+  color: var(--charcoal-light);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+/* ===== VALUE PROPS ===== */
+.values-section {
+  background: var(--walnut-dark);
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+.value-item { text-align: center; }
+.value-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  display: block;
+}
+.value-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.value-desc {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+}
+
+/* ===== ABOUT PREVIEW ===== */
+.about-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  padding: 100px 60px;
+}
+.about-img-stack {
+  position: relative;
+  height: 560px;
+}
+.about-img-main, .about-img-accent {
+  position: absolute;
+  background: var(--cream-dark);
+}
+.about-img-main {
+  width: 78%;
+  height: 88%;
+  top: 0; left: 0;
+  background: linear-gradient(135deg, #C9956E, #8B4513, #3E2820);
+}
+.about-img-accent {
+  width: 50%;
+  height: 50%;
+  bottom: 0; right: 0;
+  background: linear-gradient(135deg, #5C7355, #3A4E2E);
+  border: 6px solid var(--cream);
+}
+.about-tag {
+  position: absolute;
+  bottom: 30%;
+  right: -5%;
+  background: var(--walnut);
+  color: var(--white);
+  padding: 16px 22px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  text-align: center;
+  z-index: 2;
+}
+.about-tag strong { display: block; font-size: 1.8rem; color: var(--gold-light); }
+.about-text { padding-left: 20px; }
+.about-lead {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--walnut);
+  line-height: 1.5;
+  margin-bottom: 24px;
+  padding-left: 20px;
+  border-left: 3px solid var(--gold);
+}
+.about-body {
+  color: var(--charcoal-light);
+  line-height: 1.8;
+  font-size: 0.9rem;
+  margin-bottom: 36px;
+}
+
+/* ===== INSTAGRAM GRID ===== */
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+.insta-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.insta-item-bg {
+  width: 100%; height: 100%;
+  transition: transform 0.5s;
+}
+.insta-item:hover .insta-item-bg { transform: scale(1.06); }
+.insta-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(92,61,46,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition);
+  color: var(--white);
+  font-size: 1.3rem;
+}
+.insta-item:hover .insta-overlay { opacity: 1; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--walnut-dark);
+  color: rgba(255,255,255,0.75);
+  padding: 70px 60px 30px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 60px;
+  margin-bottom: 50px;
+}
+.footer-brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--white);
+  margin-bottom: 14px;
+}
+.footer-tagline {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  color: rgba(255,255,255,0.55);
+}
+.footer-social {
+  display: flex;
+  gap: 12px;
+}
+.social-btn {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+.social-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--white); }
+.footer-col-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  color: var(--white);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.footer-link {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  padding: 5px 0;
+  transition: var(--transition);
+}
+.footer-link:hover { color: var(--gold-light); padding-left: 4px; }
+.footer-contact-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+}
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ===== SHOP PAGE ===== */
+.shop-header {
+  height: 320px;
+  background: linear-gradient(135deg, var(--walnut-dark), var(--walnut));
+  display: flex;
+  align-items: flex-end;
+  padding: 50px 60px;
+  margin-top: 80px;
+}
+.shop-title {
+  font-size: 3rem;
+  color: var(--white);
+}
+.shop-body {
+  padding: 60px 60px;
+}
+.shop-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 1px solid var(--cream-dark);
+  padding-bottom: 24px;
+}
+.filter-btn {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 10px 22px;
+  border: 1.5px solid var(--cream-dark);
+  background: transparent;
+  color: var(--charcoal);
+  transition: var(--transition);
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--walnut);
+  border-color: var(--walnut);
+  color: var(--white);
+}
+.filter-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--charcoal-light);
+  margin-right: 8px;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+/* ===== PRODUCT DETAIL PAGE ===== */
+.product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  padding: 40px 60px 80px;
+  margin-top: 80px;
+}
+.product-gallery {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+.main-image-wrap {
+  width: 100%;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: var(--cream-dark);
+  margin-bottom: 12px;
+  cursor: zoom-in;
+}
+.main-image-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+.main-image-wrap:hover img { transform: scale(1.04); }
+.thumbs-row {
+  display: flex;
+  gap: 10px;
+}
+.thumb {
+  width: 72px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  flex-shrink: 0;
+  background: var(--cream-dark);
+}
+.thumb.active { border-color: var(--walnut); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.product-info-area { padding-top: 20px; }
+.product-info-cat {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.product-info-name {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  color: var(--walnut-dark);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.product-info-price {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+}
+.product-info-price small {
+  font-size: 0.85rem;
+  color: var(--charcoal-light);
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+}
+.star-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+.star { color: var(--gold); font-size: 0.85rem; }
+.review-count { font-size: 0.75rem; color: var(--charcoal-light); margin-left: 8px; }
+
+.option-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.size-select, .qty-select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--cream-dark);
+  background: var(--white);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  color: var(--charcoal);
+  margin-bottom: 22px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%232C2C2C'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+.size-select:focus, .qty-select:focus { border-color: var(--walnut); outline: none; }
+
+.color-swatches {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.swatch {
+  width: 36px; height: 36px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+.swatch.active {
+  border-color: var(--walnut);
+  box-shadow: 0 0 0 3px rgba(92,61,46,0.2);
+}
+.swatch:hover { transform: scale(1.1); }
+.swatch-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--charcoal);
+  color: var(--white);
+  font-size: 0.6rem;
+  padding: 4px 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.swatch:hover .swatch-tooltip { opacity: 1; }
+
+.product-actions { margin-bottom: 24px; }
+.btn-add-cart {
+  width: 100%;
+  padding: 18px;
+  background: var(--walnut-dark);
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  margin-bottom: 12px;
+}
+.btn-add-cart:hover {
+  background: var(--walnut);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(92,61,46,0.3);
+}
+.btn-paypal {
+  width: 100%;
+  padding: 16px;
+  background: #0070BA;
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-paypal:hover { background: #003087; transform: translateY(-2px); }
+.btn-paypal svg { width: 60px; height: auto; }
+.btn-whatsapp {
+  width: 100%;
+  padding: 16px;
+  background: #25D366;
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-whatsapp:hover { background: #128C7E; transform: translateY(-2px); }
+
+.product-divider { height: 1px; background: var(--cream-dark); margin: 24px 0; }
+.product-features { margin-bottom: 24px; }
+.feature-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.82rem;
+  color: var(--charcoal-light);
+  border-bottom: 1px solid var(--cream-dark);
+}
+.feature-item:last-child { border: none; }
+.feature-icon { color: var(--gold); flex-shrink: 0; }
+
+/* Accordion */
+.accordion-item { border-bottom: 1px solid var(--cream-dark); }
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  background: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  cursor: pointer;
+}
+.accordion-arrow { transition: transform 0.3s; font-size: 0.7rem; }
+.accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  font-size: 0.82rem;
+  color: var(--charcoal-light);
+  line-height: 1.75;
+}
+.accordion-item.open .accordion-body { max-height: 200px; padding-bottom: 16px; }
+
+/* ===== ABOUT PAGE ===== */
+.about-hero {
+  height: 420px;
+  margin-top: 80px;
+  background: linear-gradient(135deg, var(--walnut-dark), var(--walnut-light));
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+.about-hero::after {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 80px solid rgba(201,169,110,0.1);
+}
+.about-page-body { padding: 80px 60px; }
+.about-mission {
+  max-width: 800px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 80px;
+}
+.team-card { text-align: center; }
+.team-img {
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  background: var(--cream-dark);
+}
+.team-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--walnut-dark);
+  margin-bottom: 4px;
+}
+.team-role {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.team-bio { font-size: 0.82rem; color: var(--charcoal-light); line-height: 1.7; }
+.timeline {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-left: 40px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 40px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -36px; top: 6px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--cream);
+}
+.timeline-year {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.timeline-event {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--walnut-dark);
+  margin-bottom: 6px;
+}
+.timeline-desc { font-size: 0.82rem; color: var(--charcoal-light); line-height: 1.7; }
+
+/* ===== CONTACT PAGE ===== */
+.contact-body {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 0;
+  margin-top: 80px;
+  min-height: calc(100vh - 80px);
+}
+.contact-info {
+  background: var(--walnut-dark);
+  padding: 80px 60px;
+  color: var(--white);
+}
+.contact-info-title {
+  font-size: 2.5rem;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.contact-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  margin-bottom: 50px;
+}
+.contact-detail {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  align-items: flex-start;
+}
+.contact-icon {
+  width: 44px; height: 44px;
+  border: 1px solid rgba(201,169,110,0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-light);
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+.contact-detail-info strong {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 4px;
+  font-family: 'Poppins', sans-serif;
+}
+.contact-detail-info p { font-size: 0.88rem; color: rgba(255,255,255,0.7); line-height: 1.6; }
+.contact-form-area { padding: 80px 60px; background: var(--cream); }
+.contact-form-title { font-size: 2rem; color: var(--walnut-dark); margin-bottom: 8px; }
+.contact-form-sub { font-size: 0.85rem; color: var(--charcoal-light); margin-bottom: 40px; }
+.form-group { margin-bottom: 22px; }
+.form-label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+}
+.form-input, .form-textarea, .form-select-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--cream-dark);
+  background: var(--white);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  color: var(--charcoal);
+  transition: border-color 0.2s;
+  resize: none;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--walnut); outline: none; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-textarea { height: 130px; }
+.map-embed { height: 280px; margin-top: 50px; }
+.map-embed iframe { width: 100%; height: 100%; border: none; filter: grayscale(0.3) sepia(0.1); }
+
+/* ===== CART DRAWER ===== */
+.cart-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(44,44,44,0.5);
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+.cart-backdrop.open { opacity: 1; pointer-events: all; }
+.cart-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 420px;
+  background: var(--white);
+  z-index: 2001;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+}
+.cart-drawer.open { transform: translateX(0); }
+.cart-header {
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--cream-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--walnut-dark);
+}
+.cart-close {
+  background: none;
+  font-size: 1.1rem;
+  color: var(--charcoal-light);
+  padding: 6px;
+  transition: var(--transition);
+}
+.cart-close:hover { color: var(--walnut); }
+.cart-items { flex: 1; overflow-y: auto; padding: 20px 28px; }
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--charcoal-light);
+}
+.cart-empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+.cart-empty h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--charcoal); margin-bottom: 8px; }
+.cart-empty p { font-size: 0.82rem; }
+.cart-item {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--cream-dark);
+  align-items: start;
+}
+.cart-item-img {
+  width: 72px; height: 90px;
+  object-fit: cover;
+  background: var(--cream-dark);
+}
+.cart-item-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; color: var(--walnut-dark); margin-bottom: 4px; }
+.cart-item-meta { font-size: 0.72rem; color: var(--charcoal-light); margin-bottom: 8px; }
+.cart-item-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+.qty-btn {
+  width: 24px; height: 24px;
+  border: 1px solid var(--cream-dark);
+  background: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  color: var(--charcoal);
+  transition: var(--transition);
+}
+.qty-btn:hover { background: var(--walnut); color: var(--white); border-color: var(--walnut); }
+.cart-item-price { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); }
+.cart-remove {
+  background: none;
+  font-size: 0.65rem;
+  color: var(--charcoal-light);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0;
+  margin-top: 4px;
+  transition: var(--transition);
+}
+.cart-remove:hover { color: #c0392b; }
+.cart-footer {
+  padding: 20px 28px 28px;
+  border-top: 1px solid var(--cream-dark);
+}
+.cart-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  color: var(--charcoal-light);
+}
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  padding-top: 10px;
+  border-top: 1.5px solid var(--charcoal);
+}
+.btn-checkout {
+  width: 100%;
+  padding: 18px;
+  background: var(--walnut-dark);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  margin-bottom: 10px;
+}
+.btn-checkout:hover { background: var(--walnut); }
+.btn-paypal-checkout {
+  width: 100%;
+  padding: 16px;
+  background: #0070BA;
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-paypal-checkout:hover { background: #003087; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--walnut-dark);
+  color: var(--white);
+  padding: 14px 28px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: all 0.4s;
+  z-index: 9999;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.7s ease forwards; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--charcoal-light);
+  padding: 20px 60px 0;
+  margin-top: 80px;
+}
+.breadcrumb a { color: var(--charcoal-light); transition: var(--transition); }
+.breadcrumb a:hover { color: var(--walnut); }
+.breadcrumb-sep { font-size: 0.5rem; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .products-grid, .shop-grid { grid-template-columns: repeat(3, 1fr); }
+  .categories-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .insta-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  #navbar { padding: 0 24px; }
+  .nav-links { display: none; }
+  .nav-toggle { display: flex; }
+  .hero-content { padding: 0 24px; }
+  .section, .shop-body, .about-page-body { padding: 60px 24px; }
+  .products-grid, .shop-grid { grid-template-columns: repeat(2, 1fr); }
+  .values-section { grid-template-columns: repeat(2, 1fr); padding: 60px 24px; }
+  .about-preview { grid-template-columns: 1fr; padding: 60px 24px; }
+  .product-detail { grid-template-columns: 1fr; padding: 20px 24px 60px; }
+  .product-gallery { position: static; }
+  .contact-body { grid-template-columns: 1fr; }
+  .contact-info, .contact-form-area { padding: 50px 24px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  footer { padding: 50px 24px 20px; }
+  .cart-drawer { width: 100%; }
+  .team-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .mega-menu { display: none; }
+  .shop-header { padding: 50px 24px; }
+  .breadcrumb { padding: 20px 24px 0; }
+}
+</style>
 </head>
 <body>
-  <h1>Welcome to My Business</h1>
-  <p>We provide quality services.</p>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('home')">Shahid Rugs</a>
+  <ul class="nav-links">
+    <li class="nav-item">
+      <a class="nav-link" href="#" onclick="showPage('shop')">Shop</a>
+      <div class="mega-menu">
+        <div class="mega-col">
+          <div class="mega-col-title">Traditional</div>
+          <a class="mega-link" href="#" onclick="filterAndGo('Traditional')">Persian Classics</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Traditional')">Tabriz Style</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Traditional')">Kashan Patterns</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Traditional')">View All →</a>
+        </div>
+        <div class="mega-col">
+          <div class="mega-col-title">Modern</div>
+          <a class="mega-link" href="#" onclick="filterAndGo('Modern')">Abstract</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Modern')">Geometric</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Modern')">Minimalist</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Modern')">View All →</a>
+        </div>
+        <div class="mega-col">
+          <div class="mega-col-title">Vintage</div>
+          <a class="mega-link" href="#" onclick="filterAndGo('Vintage')">Antique Style</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Vintage')">Distressed</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Vintage')">Overdyed</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Vintage')">View All →</a>
+        </div>
+        <div class="mega-col">
+          <div class="mega-col-title">Tribal</div>
+          <a class="mega-link" href="#" onclick="filterAndGo('Tribal')">Kilim</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Tribal')">Afghan</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Tribal')">Berber</a>
+          <a class="mega-link" href="#" onclick="filterAndGo('Tribal')">View All →</a>
+        </div>
+      </div>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('about')">About</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="showPage('contact')">Contact</a></li>
+  </ul>
+  <button class="nav-cart" onclick="toggleCart()" aria-label="Cart">
+    🛒
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+  <button class="nav-toggle" id="navToggle" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <span class="hero-label">Handcrafted Since 1978</span>
+      <h1 class="hero-title fade-up">Artisan Rugs<br>for <em>Generations</em></h1>
+      <p class="hero-sub fade-up delay-1">Each rug tells a story — hand-knotted by master weavers using centuries-old techniques and the finest natural wools.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;" class="fade-up delay-2">
+        <a href="#" class="btn-primary" onclick="showPage('shop')">Shop Collection ›</a>
+        <a href="#" class="btn-outline" style="border-color:rgba(255,255,255,0.5);color:var(--white);" onclick="showPage('about')">Our Story</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee-strip">
+    <div class="marquee-inner" id="marqueeInner"></div>
+  </div>
+
+  <!-- Categories -->
+  <section class="section" style="background:var(--cream);">
+    <div class="section-header">
+      <span class="section-label">Explore Collections</span>
+      <h2 class="section-title">Four Distinct Worlds,<br>One Timeless Craft</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="categories-grid">
+      <div class="cat-card" onclick="filterAndGo('Traditional')">
+        <div class="cat-card-bg cat-bg-traditional"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-title">Traditional</div>
+          <div class="cat-card-count">4 Pieces</div>
+          <div class="cat-card-cta">Explore ›</div>
+        </div>
+      </div>
+      <div class="cat-card" onclick="filterAndGo('Modern')">
+        <div class="cat-card-bg cat-bg-modern"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-title">Modern</div>
+          <div class="cat-card-count">4 Pieces</div>
+          <div class="cat-card-cta">Explore ›</div>
+        </div>
+      </div>
+      <div class="cat-card" onclick="filterAndGo('Vintage')">
+        <div class="cat-card-bg cat-bg-vintage"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-title">Vintage</div>
+          <div class="cat-card-count">4 Pieces</div>
+          <div class="cat-card-cta">Explore ›</div>
+        </div>
+      </div>
+      <div class="cat-card" onclick="filterAndGo('Tribal')">
+        <div class="cat-card-bg cat-bg-tribal"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-title">Tribal</div>
+          <div class="cat-card-count">4 Pieces</div>
+          <div class="cat-card-cta">Explore ›</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section" style="background:var(--cream-dark);padding-top:0">
+    <div class="section-header">
+      <span class="section-label">Curated Picks</span>
+      <h2 class="section-title">Featured Pieces</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">Each piece is a singular work of art — selected for its exceptional craftsmanship and enduring beauty.</p>
+    </div>
+    <div class="products-grid" id="featuredGrid"></div>
+    <div style="text-align:center;margin-top:50px">
+      <a href="#" class="btn-outline" onclick="showPage('shop')">View All Rugs</a>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <div class="values-section">
+    <div class="value-item">
+      <span class="value-icon">🏺</span>
+      <div class="value-title">Hand-Knotted</div>
+      <p class="value-desc">Every knot tied by skilled artisans with decades of experience passed through generations.</p>
+    </div>
+    <div class="value-item">
+      <span class="value-icon">🌿</span>
+      <div class="value-title">Natural Materials</div>
+      <p class="value-desc">Pure wool, silk, and organic dyes sourced from the finest suppliers across Central Asia.</p>
+    </div>
+    <div class="value-item">
+      <span class="value-icon">📦</span>
+      <div class="value-title">White Glove Delivery</div>
+      <p class="value-desc">Insured, carefully packaged shipping with in-home installation available worldwide.</p>
+    </div>
+    <div class="value-item">
+      <span class="value-icon">✦</span>
+      <div class="value-title">Lifetime Guarantee</div>
+      <p class="value-desc">Our rugs are built to last. We stand behind every piece with a full satisfaction guarantee.</p>
+    </div>
+  </div>
+
+  <!-- About Preview -->
+  <div class="about-preview">
+    <div class="about-img-stack">
+      <div class="about-img-main"></div>
+      <div class="about-img-accent"></div>
+      <div class="about-tag">
+        <strong>45+</strong>
+        Years of Craft
+      </div>
+    </div>
+    <div class="about-text">
+      <span class="section-label">Our Heritage</span>
+      <h2 class="section-title" style="margin-bottom:20px">Rooted in Tradition,<br>Woven with Purpose</h2>
+      <p class="about-lead">"A rug is not just a floor covering — it is a living record of culture, skill, and devotion."</p>
+      <p class="about-body">Founded in Lahore in 1978, Shahid Rugs began with a single loom and an unwavering commitment to craftsmanship. Today, we work with over 200 master weavers across Pakistan and Afghanistan, preserving ancient techniques while bringing their art to homes around the world.</p>
+      <a href="#" class="btn-primary" onclick="showPage('about')">Our Full Story</a>
+    </div>
+  </div>
+
+  <!-- Instagram-style gallery -->
+  <div class="insta-grid" id="instaGrid"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">Shahid Rugs</div>
+        <p class="footer-tagline">Hand-knotted artisan rugs crafted by master weavers using centuries-old techniques. Bringing the beauty of South Asian heritage into your home.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn">f</a>
+          <a href="#" class="social-btn">ig</a>
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">p</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Collections</div>
+        <a href="#" class="footer-link" onclick="filterAndGo('Traditional')">Traditional Rugs</a>
+        <a href="#" class="footer-link" onclick="filterAndGo('Modern')">Modern Rugs</a>
+        <a href="#" class="footer-link" onclick="filterAndGo('Vintage')">Vintage Rugs</a>
+        <a href="#" class="footer-link" onclick="filterAndGo('Tribal')">Tribal Rugs</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <a href="#" class="footer-link" onclick="showPage('about')">Our Story</a>
+        <a href="#" class="footer-link" onclick="showPage('about')">Craftsmanship</a>
+        <a href="#" class="footer-link" onclick="showPage('contact')">Contact Us</a>
+        <a href="#" class="footer-link">Wholesale</a>
+        <a href="#" class="footer-link">Care Guide</a>
+      </div>
+      <div>
+        <div class="footer-col-title">Get in Touch</div>
+        <div class="footer-contact-item">📍 14 Gulberg III, Lahore, Pakistan</div>
+        <div class="footer-contact-item">📞 +92 300 123 4567</div>
+        <div class="footer-contact-item">✉ hello@shahidrugs.com</div>
+        <div class="footer-contact-item">🕒 Mon–Sat: 9am – 7pm PKT</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Shahid Rugs. All rights reserved.</span>
+      <span>Privacy Policy · Terms · Returns</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== SHOP PAGE ===== -->
+<div id="page-shop" class="page">
+  <div class="shop-header">
+    <div>
+      <span class="section-label" style="color:var(--gold-light)">Handcrafted with Soul</span>
+      <h1 class="shop-title">Our Collection</h1>
+    </div>
+  </div>
+  <div class="shop-body">
+    <div class="shop-filters">
+      <span class="filter-label">Filter by:</span>
+      <button class="filter-btn active" onclick="setFilter('All', this)">All Rugs</button>
+      <button class="filter-btn" onclick="setFilter('Traditional', this)">Traditional</button>
+      <button class="filter-btn" onclick="setFilter('Modern', this)">Modern</button>
+      <button class="filter-btn" onclick="setFilter('Vintage', this)">Vintage</button>
+      <button class="filter-btn" onclick="setFilter('Tribal', this)">Tribal</button>
+    </div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+  <footer>
+    <div class="footer-bottom" style="border:none;padding:30px 0 10px">
+      <span>© 2025 Shahid Rugs. All rights reserved.</span>
+      <a href="#" onclick="showPage('home')" style="color:rgba(255,255,255,0.35)">← Back to Home</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== PRODUCT DETAIL PAGE ===== -->
+<div id="page-product" class="page">
+  <div class="breadcrumb">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="#" onclick="showPage('shop')">Shop</a>
+    <span class="breadcrumb-sep">›</span>
+    <span id="breadcrumbProduct">Product</span>
+  </div>
+  <div class="product-detail">
+    <div class="product-gallery">
+      <div class="main-image-wrap">
+        <img id="mainProductImg" src="" alt="Product">
+      </div>
+      <div class="thumbs-row" id="thumbsRow"></div>
+    </div>
+    <div class="product-info-area">
+      <div class="product-info-cat" id="detailCat"></div>
+      <h1 class="product-info-name" id="detailName"></h1>
+      <div class="star-row">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        <span class="review-count">(48 reviews)</span>
+      </div>
+      <div class="product-info-price" id="detailPrice"></div>
+
+      <div class="option-label">Select Color</div>
+      <div class="color-swatches" id="colorSwatches"></div>
+
+      <div class="option-label">Select Size <span id="selectedSizeLabel" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--charcoal-light);"></span></div>
+      <select class="size-select" id="sizeSelect" onchange="updatePrice()">
+        <option value="5x8">5' × 8' (Standard)</option>
+        <option value="8x10">8' × 10' (Large)</option>
+        <option value="9x12">9' × 12' (Extra Large)</option>
+        <option value="custom">Custom Size — Inquire</option>
+      </select>
+
+      <div class="option-label">Quantity</div>
+      <select class="qty-select" id="qtySelect">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+
+      <div class="product-actions">
+        <button class="btn-add-cart" onclick="addToCart()">Add to Cart</button>
+        <button class="btn-paypal" onclick="paypalCheckout()">
+          Buy Now with <svg viewBox="0 0 100 32" fill="white" xmlns="http://www.w3.org/2000/svg"><text y="22" font-size="20" font-weight="bold" font-family="Arial">PayPal</text></svg>
+        </button>
+        <button class="btn-whatsapp" onclick="whatsappInquire()">
+          💬 Inquire on WhatsApp
+        </button>
+      </div>
+
+      <div class="product-divider"></div>
+      <div class="product-features">
+        <div class="feature-item"><span class="feature-icon">✦</span> Hand-knotted by master artisans</div>
+        <div class="feature-item"><span class="feature-icon">✦</span> 100% natural wool & organic dyes</div>
+        <div class="feature-item"><span class="feature-icon">✦</span> Certificate of authenticity included</div>
+        <div class="feature-item"><span class="feature-icon">✦</span> Free worldwide insured shipping</div>
+        <div class="feature-item"><span class="feature-icon">✦</span> 30-day hassle-free returns</div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Description <span class="accordion-arrow">▾</span>
+        </button>
+        <div class="accordion-body" id="detailDesc"></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Materials & Care <span class="accordion-arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          Crafted from 100% hand-spun wool with natural vegetable dyes. Pile height: 8–12mm. For care, gently vacuum on low suction weekly. Rotate annually for even wear. Professional cleaning recommended every 2–3 years.
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Shipping & Returns <span class="accordion-arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          Free worldwide shipping via DHL Express (5–10 business days). Fully insured. Returns accepted within 30 days in original condition. Custom-sized rugs are non-returnable.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABOUT PAGE ===== -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <div style="position:relative;z-index:2">
+      <span class="section-label" style="color:var(--gold-light)">Est. 1978 — Lahore, Pakistan</span>
+      <h1 style="font-size:3rem;color:var(--white);font-family:'Playfair Display',serif;">Our Story</h1>
+    </div>
+  </div>
+  <div class="about-page-body">
+    <div class="about-mission">
+      <span class="section-label">Philosophy</span>
+      <h2 class="section-title" style="margin-bottom:20px">Weaving Heritage<br>Into Every Thread</h2>
+      <div class="section-divider"></div>
+      <p style="font-size:0.95rem;color:var(--charcoal-light);line-height:1.85;margin-top:20px">Founded by master weaver Shahid Karim in 1978, our atelier began with a simple belief: that a rug should outlast its owner and tell a story across generations. Starting from a single workshop in the old city of Lahore, we have grown into one of South Asia's most respected names in artisan rugs — while never losing the intimacy and care of that first loom.</p>
+    </div>
+
+    <div style="margin-bottom:80px">
+      <div class="section-header">
+        <span class="section-label">The Team</span>
+        <h2 class="section-title">The Hands Behind the Work</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-img" style="background:linear-gradient(135deg,#C9956E,#5C3D2E);"></div>
+          <div class="team-name">Shahid Karim</div>
+          <div class="team-role">Founder & Master Weaver</div>
+          <p class="team-bio">With over 50 years of experience, Shahid learned his craft from his father and has dedicated his life to preserving Pakistan's weaving heritage.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-img" style="background:linear-gradient(135deg,#8B9D77,#3A4E2E);"></div>
+          <div class="team-name">Ayesha Karim</div>
+          <div class="team-role">Creative Director</div>
+          <p class="team-bio">Ayesha bridges tradition and contemporary design, curating patterns that speak to global tastes while honoring ancient motifs.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-img" style="background:linear-gradient(135deg,#C4A882,#5C3D2E);"></div>
+          <div class="team-name">Omar Farooq</div>
+          <div class="team-role">Head of Artisan Relations</div>
+          <p class="team-bio">Omar works directly with our network of 200+ artisan families, ensuring fair wages, safe conditions, and the preservation of traditional techniques.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-header">
+        <span class="section-label">Journey</span>
+        <h2 class="section-title">Our Milestones</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">1978</div>
+          <div class="timeline-event">The First Loom</div>
+          <p class="timeline-desc">Shahid Karim establishes a small workshop in Lahore's old city with two master weavers and a vision for quality above all else.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1990</div>
+          <div class="timeline-event">Expansion to Afghanistan</div>
+          <p class="timeline-desc">We forge partnerships with Afghani tribal weavers, adding the rich tradition of Kilim and tribal weaving to our portfolio.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2001</div>
+          <div class="timeline-event">International Recognition</div>
+          <p class="timeline-desc">Shahid Rugs wins the Asia Pacific Craft Excellence Award and begins exporting to Europe and North America.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2018</div>
+          <div class="timeline-event">Digital Transformation</div>
+          <p class="timeline-desc">We launch our online store, bringing our collections to customers worldwide while maintaining our commitment to personal service.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2024</div>
+          <div class="timeline-event">200+ Artisan Families</div>
+          <p class="timeline-desc">Our network now supports over 200 artisan families, providing sustainable income and preserving weaving heritage for future generations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-bottom" style="border:none;padding:30px 0 10px">
+      <span>© 2025 Shahid Rugs. All rights reserved.</span>
+      <a href="#" onclick="showPage('home')" style="color:rgba(255,255,255,0.35)">← Back to Home</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== CONTACT PAGE ===== -->
+<div id="page-contact" class="page">
+  <div class="contact-body">
+    <div class="contact-info">
+      <span class="section-label" style="color:var(--gold-light)">Always Here to Help</span>
+      <h2 class="contact-info-title">Let's Talk Rugs</h2>
+      <p class="contact-subtitle">Whether you're looking for a specific piece, need advice on sizing, or want to discuss a custom commission — our team is ready to help.</p>
+      <div class="contact-detail">
+        <div class="contact-icon">📍</div>
+        <div class="contact-detail-info">
+          <strong>Visit Us</strong>
+          <p>14 Gulberg III, Main Boulevard<br>Lahore, Punjab 54000, Pakistan</p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">📞</div>
+        <div class="contact-detail-info">
+          <strong>Call Us</strong>
+          <p>+92 300 123 4567<br>Mon–Sat, 9am–7pm PKT</p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">✉</div>
+        <div class="contact-detail-info">
+          <strong>Email Us</strong>
+          <p>hello@shahidrugs.com<br>We reply within 24 hours</p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">💬</div>
+        <div class="contact-detail-info">
+          <strong>WhatsApp</strong>
+          <p>+92 300 123 4567<br>Instant responses available</p>
+        </div>
+      </div>
+      <div class="map-embed" style="margin-top:40px">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54413.48!2d74.3587!3d31.5204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe6ccc7e2462!2sGulberg%20III%2C%20Lahore%2C%20Punjab!5e0!3m2!1sen!2s!4v1700000000000" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+    <div class="contact-form-area">
+      <h2 class="contact-form-title">Send a Message</h2>
+      <p class="contact-form-sub">Fill out the form and we'll get back to you within one business day.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="Your first name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Your last name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input type="text" class="form-input" placeholder="e.g. Custom rug inquiry">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" placeholder="Tell us what you're looking for..."></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;padding:18px;" onclick="submitContact()">Send Message</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2 class="cart-header-title">Your Cart</h2>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🏺</div>
+      <h3>Your cart is empty</h3>
+      <p>Discover our artisan collections</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+    <div class="cart-subtotal"><span>Shipping</span><span>Free</span></div>
+    <div class="cart-total"><span>Total</span><span id="cartTotal">$0</span></div>
+    <button class="btn-checkout">Proceed to Checkout</button>
+    <button class="btn-paypal-checkout" onclick="paypalCartCheckout()">Checkout with PayPal</button>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== PRODUCT DATA =====
+const PRODUCTS = [
+  // TRADITIONAL
+  { id: 1, name: "Isfahan Medallion", category: "Traditional", badge: "Bestseller",
+    desc: "A masterpiece of symmetry and detail, the Isfahan Medallion features an intricate central medallion surrounded by an elaborate field of arabesque vines and palmettes. Woven by our most experienced craftsmen over 8–12 months.",
+    prices: { "5x8": 1850, "8x10": 3200, "9x12": 4800, "custom": 0 },
+    colors: [{ name: "Ruby Red", hex: "#8B1A1A", img: 0 }, { name: "Midnight Blue", hex: "#1A2E5C", img: 1 }, { name: "Forest Ivory", hex: "#F5F0E8", img: 2 }],
+    bg: "radial-gradient(ellipse at 35% 40%, #C9956E 0%, #8B1A1A 40%, #3E1010 100%)" },
+  { id: 2, name: "Tabriz Garden", category: "Traditional", badge: "New",
+    desc: "Inspired by the legendary gardens of Tabriz, this rug brings floral paradise to your floor. Each bloom is individually knotted with silk highlights that catch the light beautifully.",
+    prices: { "5x8": 2100, "8x10": 3800, "9x12": 5600, "custom": 0 },
+    colors: [{ name: "Ivory Gold", hex: "#C9A96E", img: 0 }, { name: "Sage Green", hex: "#5C7355", img: 1 }, { name: "Wine", hex: "#6B1A2E", img: 2 }],
+    bg: "radial-gradient(ellipse at 55% 35%, #C9A96E, #8B6F47, #3A2A10)" },
+  { id: 3, name: "Kashan Heritage", category: "Traditional", badge: "",
+    desc: "The Kashan Heritage represents centuries of Persian weaving tradition. Its rich jewel tones and flowing botanical motifs create a rug that transforms any space into a gallery.",
+    prices: { "5x8": 2400, "8x10": 4200, "9x12": 6100, "custom": 0 },
+    colors: [{ name: "Royal Blue", hex: "#1E3A5F", img: 0 }, { name: "Burnt Sienna", hex: "#8B3A1A", img: 1 }, { name: "Emerald", hex: "#1A5C3A", img: 2 }],
+    bg: "radial-gradient(ellipse at 40% 50%, #3A6B9C, #1E3A5F, #0A1829)" },
+  { id: 4, name: "Qom Silk Touch", category: "Traditional", badge: "Limited",
+    desc: "Our most prestigious traditional offering, the Qom Silk Touch incorporates real silk highlights into a fine wool ground, creating an extraordinary interplay of matte and luminous surfaces.",
+    prices: { "5x8": 3200, "8x10": 5800, "9x12": 8500, "custom": 0 },
+    colors: [{ name: "Gold Ivory", hex: "#D4AF6C", img: 0 }, { name: "Charcoal", hex: "#3A3A3A", img: 1 }, { name: "Rose", hex: "#9C4A5C", img: 2 }],
+    bg: "radial-gradient(ellipse at 50% 45%, #D4AF6C, #8B6B30, #3A2A05)" },
+
+  // MODERN
+  { id: 5, name: "Meridian Abstract", category: "Modern", badge: "New",
+    desc: "Bold brushstroke-inspired forms in a neutral palette make the Meridian Abstract a striking statement piece. Designed by our contemporary art team to complement both minimalist and eclectic interiors.",
+    prices: { "5x8": 1450, "8x10": 2600, "9x12": 3900, "custom": 0 },
+    colors: [{ name: "Ash Grey", hex: "#9B9B9B", img: 0 }, { name: "Sand", hex: "#D4B896", img: 1 }, { name: "Slate Blue", hex: "#4A6B8A", img: 2 }],
+    bg: "linear-gradient(135deg, #9B9B9B 0%, #5C5C5C 50%, #2C2C2C 100%)" },
+  { id: 6, name: "Grid & Flow", category: "Modern", badge: "",
+    desc: "A sophisticated geometric grid pattern that plays with positive and negative space. The hand-knotted texture adds warmth and depth to what appears, at first glance, to be a purely graphic design.",
+    prices: { "5x8": 1280, "8x10": 2350, "9x12": 3500, "custom": 0 },
+    colors: [{ name: "Off White", hex: "#F5F0E8", img: 0 }, { name: "Warm Black", hex: "#2C2C2C", img: 1 }, { name: "Terracotta", hex: "#C4622D", img: 2 }],
+    bg: "linear-gradient(45deg, #2C2C2C 25%, #5C5C5C 25%, #5C5C5C 50%, #2C2C2C 50%, #2C2C2C 75%, #5C5C5C 75%)" },
+  { id: 7, name: "Dune Textures", category: "Modern", badge: "Bestseller",
+    desc: "Taking cues from wind-sculpted desert landscapes, Dune Textures uses tonal shifts in natural wool to create a subtly undulating surface that changes appearance with different light conditions.",
+    prices: { "5x8": 1600, "8x10": 2850, "9x12": 4200, "custom": 0 },
+    colors: [{ name: "Dune", hex: "#C9A96E", img: 0 }, { name: "Clay", hex: "#B5651D", img: 1 }, { name: "Smoke", hex: "#8B8680", img: 2 }],
+    bg: "linear-gradient(160deg, #E8D5B0, #C9A96E, #8B6F47, #5C3D2E)" },
+  { id: 8, name: "Silhouette", category: "Modern", badge: "",
+    desc: "A quiet, contemplative design featuring organic silhouettes floating on a field of deep charcoal. The Silhouette rug brings a gallery-art sensibility to everyday living.",
+    prices: { "5x8": 1750, "8x10": 3100, "9x12": 4600, "custom": 0 },
+    colors: [{ name: "Charcoal", hex: "#3A3A3A", img: 0 }, { name: "Forest", hex: "#3A5C2E", img: 1 }, { name: "Navy", hex: "#1A2E5C", img: 2 }],
+    bg: "linear-gradient(135deg, #3A3A3A 0%, #1A1A1A 100%)" },
+
+  // VINTAGE
+  { id: 9, name: "Faded Splendor", category: "Vintage", badge: "New",
+    desc: "Expertly crafted to replicate the beautiful patina of antique rugs, the Faded Splendor uses a special tea-wash technique that gently ages the wool, creating depth and character that normally takes decades to achieve.",
+    prices: { "5x8": 1950, "8x10": 3500, "9x12": 5200, "custom": 0 },
+    colors: [{ name: "Faded Rose", hex: "#C4826E", img: 0 }, { name: "Antique Gold", hex: "#B8960C", img: 1 }, { name: "Pale Blue", hex: "#7BA3B5", img: 2 }],
+    bg: "radial-gradient(ellipse at 45% 40%, #C4826E, #8B4A32, #5C2E1E)" },
+  { id: 10, name: "Heirloom Bloom", category: "Vintage", badge: "Bestseller",
+    desc: "Our most popular vintage piece, the Heirloom Bloom features overscale florals in a palette of softly aged hues. It carries the warmth and story of a treasured antique.",
+    prices: { "5x8": 2200, "8x10": 3900, "9x12": 5700, "custom": 0 },
+    colors: [{ name: "Dusty Rose", hex: "#C4826E", img: 0 }, { name: "Sage", hex: "#7A8C6E", img: 1 }, { name: "Cream", hex: "#EDE6D6", img: 2 }],
+    bg: "radial-gradient(ellipse at 55% 45%, #C4826E, #8B5C4A, #5C3D2E)" },
+  { id: 11, name: "Overdyed Tapestry", category: "Vintage", badge: "",
+    desc: "An authentic vintage rug, individually sourced from estate collections, then painstakingly over-dyed in a single vibrant hue to create a striking fusion of traditional pattern and contemporary colour.",
+    prices: { "5x8": 2600, "8x10": 4700, "9x12": 7000, "custom": 0 },
+    colors: [{ name: "Cobalt", hex: "#1E5C9C", img: 0 }, { name: "Magenta", hex: "#9C1E5C", img: 1 }, { name: "Ochre", hex: "#C48C1A", img: 2 }],
+    bg: "radial-gradient(ellipse, #1E5C9C, #0A2E5C, #05152E)" },
+  { id: 12, name: "Worn Medallion", category: "Vintage", badge: "Limited",
+    desc: "The Worn Medallion celebrates the beauty of imperfection. Its subtly distressed surface, achieved through careful hand-shearing, tells the story of a life beautifully lived.",
+    prices: { "5x8": 1700, "8x10": 3000, "9x12": 4500, "custom": 0 },
+    colors: [{ name: "Wheat", hex: "#D4B896", img: 0 }, { name: "Rust", hex: "#8B3A1A", img: 1 }, { name: "Slate", hex: "#6B7C8B", img: 2 }],
+    bg: "radial-gradient(ellipse, #D4B896, #8B6F47, #5C3D2E)" },
+
+  // TRIBAL
+  { id: 13, name: "Kilim Nomad", category: "Tribal", badge: "New",
+    desc: "Woven by nomadic Balochi craftswomen using flat-weave kilim technique, the Kilim Nomad carries the raw energy of the open steppe. Its bold geometric patterns and saturated colours are pure visual energy.",
+    prices: { "5x8": 980, "8x10": 1750, "9x12": 2600, "custom": 0 },
+    colors: [{ name: "Saffron", hex: "#D4820C", img: 0 }, { name: "Berry", hex: "#6B1A3A", img: 1 }, { name: "Turquoise", hex: "#1A7C8B", img: 2 }],
+    bg: "linear-gradient(135deg, #D4820C 0%, #8B4A0C 33%, #6B1A3A 66%, #3A0A1E 100%)" },
+  { id: 14, name: "Afghan War Rug", category: "Tribal", badge: "Rare",
+    desc: "A powerful collector's piece, the Afghan War Rug subverts traditional carpet motifs to document lived experience. Each is unique, woven by artisans in Kunduz province.",
+    prices: { "5x8": 1400, "8x10": 2500, "9x12": 3800, "custom": 0 },
+    colors: [{ name: "Terracotta", hex: "#C4622D", img: 0 }, { name: "Deep Red", hex: "#6B0A0A", img: 1 }, { name: "Indigo", hex: "#1A1A6B", img: 2 }],
+    bg: "radial-gradient(ellipse, #C4622D, #8B3A0C, #3A1A05)" },
+  { id: 15, name: "Berber Dreams", category: "Tribal", badge: "Bestseller",
+    desc: "Channelling the spirit of North African boucherouite weavings, Berber Dreams is joyful, expressive, and completely one-of-a-kind. Thick pile, loose knots, and wild colour.",
+    prices: { "5x8": 1100, "8x10": 2000, "9x12": 3000, "custom": 0 },
+    colors: [{ name: "Natural Ivory", hex: "#F5F0E8", img: 0 }, { name: "Black Diamond", hex: "#1A1A1A", img: 1 }, { name: "Pumpkin", hex: "#C47A2D", img: 2 }],
+    bg: "linear-gradient(135deg, #F5F0E8 0%, #C4A882 50%, #8B6F47 100%)" },
+  { id: 16, name: "Gabbeh Spirit", category: "Tribal", badge: "",
+    desc: "Gabbeh rugs are among the most expressive in the world — thick, shaggy, painted with naïve imagery that captures moments from nomadic life. This piece is pure soul.",
+    prices: { "5x8": 1250, "8x10": 2200, "9x12": 3350, "custom": 0 },
+    colors: [{ name: "Turmeric", hex: "#C49A1A", img: 0 }, { name: "Olive", hex: "#6B7C2E", img: 1 }, { name: "Crimson", hex: "#8B0A2E", img: 2 }],
+    bg: "linear-gradient(160deg, #C49A1A, #8B6F0A, #5C3D05)" }
+];
+
+// ===== STATE =====
+let cart = [];
+let currentFilter = 'All';
+let currentProductId = null;
+let currentColorIdx = 0;
+
+// ===== HELPERS =====
+function getProductBg(p, colorIdx) {
+  // Simulate different color imgs
+  const shifts = [0, 15, -15];
+  return p.bg;
+}
+
+function getProductImg(p, imgIdx) {
+  const patterns = [p.bg, p.bg.replace('ellipse', 'circle'), p.bg.replace('135deg', '225deg'),
+    p.bg.replace('radial', 'linear').replace('ellipse at 35% 40%','135deg'), p.bg.replace('100%','90%')];
+  return patterns[imgIdx % patterns.length] || p.bg;
+}
+
+function formatPrice(price) {
+  if (price === 0) return 'Contact for Price';
+  return '$' + price.toLocaleString();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===== PAGES =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+  updateNavStyle(name);
+
+  if (name === 'shop') renderShopGrid();
+  if (name === 'home') renderFeatured();
+}
+
+function updateNavStyle(page) {
+  const nb = document.getElementById('navbar');
+  if (page === 'home') {
+    nb.classList.remove('scrolled');
+    window.addEventListener('scroll', handleScroll);
+  } else {
+    nb.classList.add('scrolled');
+    window.removeEventListener('scroll', handleScroll);
+  }
+}
+
+function handleScroll() {
+  const nb = document.getElementById('navbar');
+  if (window.scrollY > 60) nb.classList.add('scrolled');
+  else nb.classList.remove('scrolled');
+
+  // Parallax
+  const bg = document.getElementById('heroBg');
+  if (bg) bg.style.transform = `scale(1.05) translateY(${window.scrollY * 0.25}px)`;
+}
+window.addEventListener('scroll', handleScroll);
+
+function filterAndGo(cat) {
+  currentFilter = cat;
+  setFilterBtn(cat);
+  showPage('shop');
+}
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderShopGrid();
+}
+
+function setFilterBtn(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().replace(' Rugs','') === cat || (cat === 'All' && b.textContent.trim() === 'All Rugs'));
+  });
+}
+
+// ===== PRODUCT CARD HTML =====
+function productCardHTML(p, targetPage) {
+  const basePrice = p.prices['5x8'];
+  const badgeHTML = p.badge ? `<div class="product-badge${p.badge === 'New' ? ' new' : ''}">${p.badge}</div>` : '';
+  return `
+    <div class="product-card" onclick="openProduct(${p.id})">
+      <div class="product-img-wrap">
+        <div style="width:100%;height:100%;background:${p.bg};"></div>
+        ${badgeHTML}
+        <div class="product-quick-add">View Product</div>
+      </div>
+      <div class="product-cat">${p.category}</div>
+      <div class="product-name">${p.name}</div>
+      <div class="product-price">From ${formatPrice(basePrice)} <span>/ 5×8</span></div>
+    </div>`;
+}
+
+// ===== RENDER FEATURED =====
+function renderFeatured() {
+  const grid = document.getElementById('featuredGrid');
+  if (!grid) return;
+  const featured = [PRODUCTS[0], PRODUCTS[4], PRODUCTS[8], PRODUCTS[12]];
+  grid.innerHTML = featured.map(p => productCardHTML(p)).join('');
+}
+
+// ===== RENDER SHOP =====
+function renderShopGrid() {
+  const grid = document.getElementById('shopGrid');
+  if (!grid) return;
+  const filtered = currentFilter === 'All' ? PRODUCTS : PRODUCTS.filter(p => p.category === currentFilter);
+  grid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
+}
+
+// ===== OPEN PRODUCT =====
+function openProduct(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  currentProductId = id;
+  currentColorIdx = 0;
+
+  document.getElementById('breadcrumbProduct').textContent = p.name;
+  document.getElementById('detailCat').textContent = p.category;
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailDesc').textContent = p.desc;
+
+  // Main image
+  const mainImg = document.getElementById('mainProductImg');
+  mainImg.style.display = 'none';
+  mainImg.parentElement.style.background = p.bg;
+
+  // Thumbnails
+  const thumbsRow = document.getElementById('thumbsRow');
+  thumbsRow.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const div = document.createElement('div');
+    div.className = 'thumb' + (i === 0 ? ' active' : '');
+    div.style.background = getProductImg(p, i);
+    div.onclick = () => {
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      div.classList.add('active');
+      document.getElementById('mainProductImg').parentElement.style.background = getProductImg(p, i);
+    };
+    thumbsRow.appendChild(div);
+  }
+
+  // Color swatches
+  const swatchContainer = document.getElementById('colorSwatches');
+  swatchContainer.innerHTML = '';
+  p.colors.forEach((c, idx) => {
+    const sw = document.createElement('div');
+    sw.className = 'swatch' + (idx === 0 ? ' active' : '');
+    sw.style.background = c.hex;
+    sw.style.border = c.hex === '#F5F0E8' || c.hex === '#EDE6D6' ? '2px solid #ccc' : '2px solid transparent';
+    sw.innerHTML = `<div class="swatch-tooltip">${c.name}</div>`;
+    sw.onclick = () => {
+      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      currentColorIdx = idx;
+      // Change main image bg slightly
+      const tint = c.hex;
+      document.getElementById('mainProductImg').parentElement.style.background = `linear-gradient(135deg, ${tint}88, ${tint}), ${p.bg}`;
+    };
+    swatchContainer.appendChild(sw);
+  });
+
+  updatePrice();
+  showPage('product');
+}
+
+// ===== PRICE UPDATE =====
+function updatePrice() {
+  const p = PRODUCTS.find(x => x.id === currentProductId);
+  if (!p) return;
+  const size = document.getElementById('sizeSelect').value;
+  const price = p.prices[size];
+  document.getElementById('detailPrice').innerHTML = price === 0
+    ? 'Contact Us for Price <small>(Custom Size)</small>'
+    : formatPrice(price) + ' <small>USD</small>';
+  const labels = { "5x8": "5' × 8'", "8x10": "8' × 10'", "9x12": "9' × 12'", "custom": "Custom" };
+  document.getElementById('selectedSizeLabel').textContent = '— ' + (labels[size] || '');
+}
+
+// ===== ADD TO CART =====
+function addToCart() {
+  const p = PRODUCTS.find(x => x.id === currentProductId);
+  if (!p) return;
+  const size = document.getElementById('sizeSelect').value;
+  const qty = parseInt(document.getElementById('qtySelect').value);
+  const price = p.prices[size];
+  if (price === 0) { showToast('Please contact us for custom sizing.'); return; }
+
+  const activeSwatch = document.querySelector('.swatch.active');
+  const colorName = activeSwatch ? p.colors[currentColorIdx]?.name : p.colors[0].name;
+
+  const existing = cart.find(item => item.id === p.id && item.size === size && item.color === colorName);
+  if (existing) { existing.qty += qty; }
+  else { cart.push({ id: p.id, name: p.name, category: p.category, size, color: colorName, price, qty, bg: p.bg }); }
+
+  updateCartUI();
+  toggleCart();
+  showToast(`"${p.name}" added to cart!`);
+}
+
+// ===== CART UI =====
+function updateCartUI() {
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const itemCount = cart.reduce((s, i) => s + i.qty, 0);
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = itemCount;
+  countEl.classList.toggle('has-items', itemCount > 0);
+
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartFooter = document.getElementById('cartFooter');
+
+  if (cart.length === 0) {
+    cartItemsEl.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🏺</div><h3>Your cart is empty</h3><p>Discover our artisan collections</p></div>`;
+    cartFooter.style.display = 'none';
+  } else {
+    cartItemsEl.innerHTML = cart.map((item, idx) => `
+      <div class="cart-item">
+        <div class="cart-item-img" style="background:${item.bg}"></div>
+        <div>
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-meta">${item.category} · ${item.size.replace('x', '×')} · ${item.color}</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+            <span>${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+          </div>
+          <button class="cart-remove" onclick="removeFromCart(${idx})">Remove</button>
+        </div>
+        <div class="cart-item-price">${formatPrice(item.price * item.qty)}</div>
+      </div>`).join('');
+    cartFooter.style.display = 'block';
+    document.getElementById('cartSubtotal').textContent = formatPrice(total);
+    document.getElementById('cartTotal').textContent = formatPrice(total);
+  }
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+  updateCartUI();
+}
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  updateCartUI();
+}
+
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartBackdrop').classList.toggle('open');
+}
+
+// ===== PAYPAL =====
+function paypalCheckout() {
+  const p = PRODUCTS.find(x => x.id === currentProductId);
+  if (!p) return;
+  const size = document.getElementById('sizeSelect').value;
+  const price = p.prices[size];
+  if (price === 0) { showToast('Please inquire for custom pricing.'); return; }
+  const url = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=payments@shahidrugs.com&item_name=${encodeURIComponent(p.name + ' (' + size + ')')}&amount=${price}&currency_code=USD`;
+  window.open(url, '_blank');
+}
+
+function paypalCartCheckout() {
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const url = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=payments@shahidrugs.com&item_name=${encodeURIComponent('Shahid Rugs Order')}&amount=${total}&currency_code=USD`;
+  window.open(url, '_blank');
+}
+
+// ===== WHATSAPP =====
+function whatsappInquire() {
+  const p = PRODUCTS.find(x => x.id === currentProductId);
+  if (!p) return;
+  const size = document.getElementById('sizeSelect').value;
+  const sizeLabels = { "5x8": "5'×8'", "8x10": "8'×10'", "9x12": "9'×12'", "custom": "Custom Size" };
+  const msg = `Hi Shahid Rugs, I am interested in ${p.name} in size ${sizeLabels[size]}.`;
+  window.open(`https://wa.me/923001234567?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ===== ACCORDION =====
+function toggleAccordion(btn) {
+  const item = btn.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ===== CONTACT SUBMIT =====
+function submitContact() {
+  showToast('Message sent! We\'ll reply within 24 hours.');
+}
+
+// ===== MARQUEE INIT =====
+function initMarquee() {
+  const items = ['Handcrafted Since 1978', '✦', 'Free Worldwide Shipping', '✦', 'Natural Wool & Silk', '✦', 'Certificate of Authenticity', '✦', 'Custom Sizes Available', '✦', 'Master Artisan Weavers', '✦'];
+  const inner = document.getElementById('marqueeInner');
+  if (!inner) return;
+  const double = [...items, ...items];
+  inner.innerHTML = double.map(t => `<span class="marquee-item">${t}</span>`).join('');
+}
+
+// ===== INSTAGRAM GRID =====
+function initInstaGrid() {
+  const grid = document.getElementById('instaGrid');
+  if (!grid) return;
+  const bgs = [
+    'radial-gradient(ellipse, #C9956E, #8B1A1A, #3E1010)',
+    'linear-gradient(135deg, #8B9D77, #3A4E2E)',
+    'radial-gradient(ellipse, #C4A882, #8B6F47, #5C3D2E)',
+    'linear-gradient(160deg, #D4820C, #6B1A3A, #3A0A1E)',
+    'radial-gradient(ellipse, #9B9B9B, #2C2C2C)',
+    'linear-gradient(135deg, #C4826E, #8B4A32, #5C2E1E)'
+  ];
+  grid.innerHTML = bgs.map(bg => `
+    <div class="insta-item">
+      <div class="insta-item-bg" style="background:${bg};width:100%;height:100%;"></div>
+      <div class="insta-overlay">📷</div>
+    </div>`).join('');
+}
+
+// ===== MOBILE NAV =====
+function toggleMobileNav() {
+  const links = document.querySelector('.nav-links');
+  if (links.style.display === 'flex') {
+    links.style.display = '';
+  } else {
+    links.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:rgba(245,240,232,0.98);padding:30px;gap:20px;z-index:999;box-shadow:var(--shadow);';
+  }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  initMarquee();
+  renderFeatured();
+  initInstaGrid();
+  updateCartUI();
+});
+</script>
 </body>
 </html>
