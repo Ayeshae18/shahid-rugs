@@ -2110,7 +2110,7 @@ function mdToProduct(slug, data, idx) {
 
 async function loadProducts() {
   const promises = MD_FILES.map((slug, idx) =>
-    fetch('/content/rugs/' + slug + '.md')
+    fetch('https://raw.githubusercontent.com/Ayeshae18/shahid-rugs/main/content/rugs/' + slug + '.md')
       .then(r => r.ok ? r.text() : null)
       .then(text => text ? mdToProduct(slug, parseFrontMatter(text), idx) : null)
       .catch(() => null)
