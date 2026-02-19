@@ -6,7 +6,6 @@
 <title>Shahid Rugs — Artisan Rugs for Generations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <style>
 /* ===== CSS VARIABLES ===== */
 :root {
@@ -1615,7 +1614,7 @@ footer {
         <div class="footer-col-title">Get in Touch</div>
         <div class="footer-contact-item">📍 14 Gulberg III, Lahore, Pakistan</div>
         <div class="footer-contact-item">📞 +92 300 123 4567</div>
-        <div class="footer-contact-item">✉ hello@shahidrugs.com</div>
+        <div class="footer-contact-item">✉ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="18707d747477586b707970717c6a6d7f6b367b7775">[email&#160;protected]</a></div>
         <div class="footer-contact-item">🕒 Mon–Sat: 9am – 7pm PKT</div>
       </div>
     </div>
@@ -1853,7 +1852,7 @@ footer {
         <div class="contact-icon">✉</div>
         <div class="contact-detail-info">
           <strong>Email Us</strong>
-          <p>hello@shahidrugs.com<br>We reply within 24 hours</p>
+          <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4aca1a8a8ab84b7aca5acada0b6b1a3b7eaa7aba9">[email&#160;protected]</a><br>We reply within 24 hours</p>
         </div>
       </div>
       <div class="contact-detail">
@@ -2015,23 +2014,147 @@ const PRODUCTS = [
     bg: "linear-gradient(160deg, #C49A1A, #8B6F0A, #5C3D05)" }
 ];
 
+// ===== CMS CONTENT LOADER =====
+// Fetches .md files from content/rugs/ so photos uploaded via CMS appear on the site
+
+const MD_FILES = [
+  'traditional-isfahan-medallion','traditional-tabriz-garden',
+  'traditional-kashan-heritage','traditional-qom-silk-touch',
+  'modern-meridian-abstract','modern-grid-and-flow',
+  'modern-dune-textures','modern-silhouette',
+  'vintage-faded-splendor','vintage-heirloom-bloom',
+  'vintage-overdyed-tapestry','vintage-worn-medallion',
+  'tribal-kilim-nomad','tribal-afghan-war-rug',
+  'tribal-berber-dreams','tribal-gabbeh-spirit'
+];
+
+const FALLBACK_BG = {
+  'traditional-isfahan-medallion':  'radial-gradient(ellipse at 35% 40%, #C9956E 0%, #8B1A1A 40%, #3E1010 100%)',
+  'traditional-tabriz-garden':      'radial-gradient(ellipse at 55% 35%, #C9A96E, #8B6F47, #3A2A10)',
+  'traditional-kashan-heritage':    'radial-gradient(ellipse at 40% 50%, #3A6B9C, #1E3A5F, #0A1829)',
+  'traditional-qom-silk-touch':     'radial-gradient(ellipse at 50% 45%, #D4AF6C, #8B6B30, #3A2A05)',
+  'modern-meridian-abstract':       'linear-gradient(135deg, #9B9B9B 0%, #5C5C5C 50%, #2C2C2C 100%)',
+  'modern-grid-and-flow':           'linear-gradient(45deg, #2C2C2C 25%, #5C5C5C 25%, #5C5C5C 50%, #2C2C2C 50%, #2C2C2C 75%, #5C5C5C 75%)',
+  'modern-dune-textures':           'linear-gradient(160deg, #E8D5B0, #C9A96E, #8B6F47, #5C3D2E)',
+  'modern-silhouette':              'linear-gradient(135deg, #3A3A3A 0%, #1A1A1A 100%)',
+  'vintage-faded-splendor':         'radial-gradient(ellipse at 45% 40%, #C4826E, #8B4A32, #5C2E1E)',
+  'vintage-heirloom-bloom':         'radial-gradient(ellipse at 55% 45%, #C4826E, #8B5C4A, #5C3D2E)',
+  'vintage-overdyed-tapestry':      'radial-gradient(ellipse, #1E5C9C, #0A2E5C, #05152E)',
+  'vintage-worn-medallion':         'radial-gradient(ellipse, #D4B896, #8B6F47, #5C3D2E)',
+  'tribal-kilim-nomad':             'linear-gradient(135deg, #D4820C 0%, #8B4A0C 33%, #6B1A3A 66%, #3A0A1E 100%)',
+  'tribal-afghan-war-rug':          'radial-gradient(ellipse, #C4622D, #8B3A0C, #3A1A05)',
+  'tribal-berber-dreams':           'linear-gradient(135deg, #F5F0E8 0%, #C4A882 50%, #8B6F47 100%)',
+  'tribal-gabbeh-spirit':           'linear-gradient(160deg, #C49A1A, #8B6F0A, #5C3D05)'
+};
+
+function parseFrontMatter(text) {
+  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+  const lines = match[1].split('\n');
+  const result = {};
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const keyMatch = line.match(/^(\w+):\s*(.*)/);
+    if (!keyMatch) { i++; continue; }
+    const key = keyMatch[1];
+    const val = keyMatch[2].trim();
+    if (val === '' && lines[i+1] && lines[i+1].match(/^\s+-/)) {
+      const items = [];
+      i++;
+      while (i < lines.length && lines[i].match(/^\s+-/)) {
+        const obj = {};
+        const inlineVal = lines[i].replace(/^\s+-\s*/, '').trim();
+        if (inlineVal && !inlineVal.includes(':')) { items.push(inlineVal); i++; continue; }
+        i++;
+        while (i < lines.length && lines[i].match(/^\s{4,}/) && !lines[i].match(/^\s+-\s/)) {
+          const subMatch = lines[i].match(/^\s+(\w+):\s*(.*)/);
+          if (subMatch) {
+            let sv = subMatch[2].trim().replace(/^["\'"]|["\'"]$/g, '');
+            if (sv === 'true') sv = true;
+            else if (sv === 'false') sv = false;
+            else if (!isNaN(sv) && sv !== '') sv = Number(sv);
+            obj[subMatch[1]] = sv;
+          }
+          i++;
+        }
+        if (Object.keys(obj).length) items.push(obj);
+      }
+      result[key] = items; continue;
+    }
+    let v = val.replace(/^["\'"]|["\'"]$/g, '');
+    if (v === 'true') v = true;
+    else if (v === 'false') v = false;
+    else if (!isNaN(v) && v !== '') v = Number(v);
+    result[key] = v; i++;
+  }
+  return result;
+}
+
+function mdToProduct(slug, data, idx) {
+  const gallery = Array.isArray(data.gallery) ? data.gallery : [];
+  const colors  = Array.isArray(data.colors)  ? data.colors  : [];
+  return {
+    id: idx + 1, slug,
+    name:     data.title       || slug,
+    category: data.category    || 'Traditional',
+    badge:    data.badge       || '',
+    desc:     data.description || '',
+    prices: { '5x8': data.price_5x8||0, '8x10': data.price_8x10||0, '9x12': data.price_9x12||0, 'custom': 0 },
+    gallery:  gallery.map(g => typeof g === 'object' ? g.image : g).filter(Boolean),
+    colors:   colors.map(c => ({ name: c.name||'', hex: c.hex||'#5C3D2E', imgIdx: c.image_index||0 })),
+    featured: data.featured || false,
+    bg: FALLBACK_BG[slug] || 'linear-gradient(135deg,#C9A96E,#5C3D2E)'
+  };
+}
+
+async function loadProducts() {
+  const promises = MD_FILES.map((slug, idx) =>
+    fetch('/content/rugs/' + slug + '.md')
+      .then(r => r.ok ? r.text() : null)
+      .then(text => text ? mdToProduct(slug, parseFrontMatter(text), idx) : null)
+      .catch(() => null)
+  );
+  const results = await Promise.all(promises);
+  const loaded = results.filter(Boolean);
+  PRODUCTS = loaded.length > 0 ? loaded : getFallbackProducts();
+  renderFeatured();
+  renderShopGrid();
+}
+
+function getFallbackProducts() {
+  return MD_FILES.map((slug,idx) => ({
+    id:idx+1, slug, name: slug.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '),
+    category: slug.split('-')[0].charAt(0).toUpperCase()+slug.split('-')[0].slice(1),
+    badge:'', desc:'', prices:{'5x8':0,'8x10':0,'9x12':0,'custom':0},
+    gallery:[], colors:[], featured:false, bg: FALLBACK_BG[slug]||'linear-gradient(135deg,#C9A96E,#5C3D2E)'
+  }));
+}
+
 // ===== STATE =====
 let cart = [];
 let currentFilter = 'All';
 let currentProductId = null;
 let currentColorIdx = 0;
 
-// ===== HELPERS =====
-function getProductBg(p, colorIdx) {
-  // Simulate different color imgs
-  const shifts = [0, 15, -15];
-  return p.bg;
+// ===== IMAGE HELPER =====
+// Returns an <img> tag if the product has a real photo, otherwise a gradient div
+function getProductImgEl(p, imgIdx) {
+  if (p.gallery && p.gallery[imgIdx]) {
+    return { type: 'img', src: p.gallery[imgIdx] };
+  }
+  // fallback gradient
+  const patterns = [p.bg,
+    p.bg.replace('ellipse', 'circle'),
+    p.bg.replace('135deg', '225deg'),
+    p.bg.replace('radial', 'linear').replace('ellipse at 35% 40%','135deg'),
+    p.bg.replace('100%','90%')];
+  return { type: 'bg', bg: patterns[imgIdx % patterns.length] || p.bg };
 }
 
 function getProductImg(p, imgIdx) {
-  const patterns = [p.bg, p.bg.replace('ellipse', 'circle'), p.bg.replace('135deg', '225deg'),
-    p.bg.replace('radial', 'linear').replace('ellipse at 35% 40%','135deg'), p.bg.replace('100%','90%')];
-  return patterns[imgIdx % patterns.length] || p.bg;
+  const el = getProductImgEl(p, imgIdx);
+  return el.type === 'img' ? null : el.bg;
 }
 
 function formatPrice(price) {
@@ -2099,13 +2222,17 @@ function setFilterBtn(cat) {
 }
 
 // ===== PRODUCT CARD HTML =====
-function productCardHTML(p, targetPage) {
+function productCardHTML(p) {
   const basePrice = p.prices['5x8'];
   const badgeHTML = p.badge ? `<div class="product-badge${p.badge === 'New' ? ' new' : ''}">${p.badge}</div>` : '';
+  const hasImg = p.gallery && p.gallery[0];
+  const imgContent = hasImg
+    ? `<img src="${p.gallery[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`
+    : `<div style="width:100%;height:100%;background:${p.bg};"></div>`;
   return `
     <div class="product-card" onclick="openProduct(${p.id})">
       <div class="product-img-wrap">
-        <div style="width:100%;height:100%;background:${p.bg};"></div>
+        ${imgContent}
         ${badgeHTML}
         <div class="product-quick-add">View Product</div>
       </div>
@@ -2144,21 +2271,41 @@ function openProduct(id) {
   document.getElementById('detailDesc').textContent = p.desc;
 
   // Main image
+  const mainWrap = document.getElementById('mainProductImg').parentElement;
   const mainImg = document.getElementById('mainProductImg');
-  mainImg.style.display = 'none';
-  mainImg.parentElement.style.background = p.bg;
+
+  function setMainImage(imgIdx) {
+    const el = getProductImgEl(p, imgIdx);
+    if (el.type === 'img') {
+      mainImg.src = el.src;
+      mainImg.style.display = 'block';
+      mainWrap.style.background = 'none';
+    } else {
+      mainImg.style.display = 'none';
+      mainWrap.style.background = el.bg;
+    }
+  }
+  setMainImage(0);
 
   // Thumbnails
   const thumbsRow = document.getElementById('thumbsRow');
   thumbsRow.innerHTML = '';
-  for (let i = 0; i < 5; i++) {
+  const thumbCount = Math.max(p.gallery && p.gallery.length ? p.gallery.length : 0, 5);
+  for (let i = 0; i < Math.min(thumbCount, 5); i++) {
     const div = document.createElement('div');
     div.className = 'thumb' + (i === 0 ? ' active' : '');
-    div.style.background = getProductImg(p, i);
+    const el = getProductImgEl(p, i);
+    if (el.type === 'img') {
+      div.style.backgroundImage = `url(${el.src})`;
+      div.style.backgroundSize = 'cover';
+      div.style.backgroundPosition = 'center';
+    } else {
+      div.style.background = el.bg;
+    }
     div.onclick = () => {
       document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
       div.classList.add('active');
-      document.getElementById('mainProductImg').parentElement.style.background = getProductImg(p, i);
+      setMainImage(i);
     };
     thumbsRow.appendChild(div);
   }
@@ -2176,9 +2323,19 @@ function openProduct(id) {
       document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
       sw.classList.add('active');
       currentColorIdx = idx;
-      // Change main image bg slightly
-      const tint = c.hex;
-      document.getElementById('mainProductImg').parentElement.style.background = `linear-gradient(135deg, ${tint}88, ${tint}), ${p.bg}`;
+      // Switch to the gallery image linked to this colour swatch
+      const linkedImgIdx = c.imgIdx || 0;
+      const el = getProductImgEl(p, linkedImgIdx);
+      const mainImg2 = document.getElementById('mainProductImg');
+      const mainWrap2 = mainImg2.parentElement;
+      if (el.type === 'img') {
+        mainImg2.src = el.src;
+        mainImg2.style.display = 'block';
+        mainWrap2.style.background = 'none';
+      } else {
+        mainImg2.style.display = 'none';
+        mainWrap2.style.background = `linear-gradient(135deg, ${c.hex}88, ${c.hex}), ${p.bg}`;
+      }
     };
     swatchContainer.appendChild(sw);
   });
@@ -2214,7 +2371,7 @@ function addToCart() {
 
   const existing = cart.find(item => item.id === p.id && item.size === size && item.color === colorName);
   if (existing) { existing.qty += qty; }
-  else { cart.push({ id: p.id, name: p.name, category: p.category, size, color: colorName, price, qty, bg: p.bg }); }
+  else { cart.push({ id: p.id, name: p.name, category: p.category, size, color: colorName, price, qty, bg: p.bg, img: p.gallery && p.gallery[0] ? p.gallery[0] : null }); }
 
   updateCartUI();
   toggleCart();
@@ -2238,7 +2395,7 @@ function updateCartUI() {
   } else {
     cartItemsEl.innerHTML = cart.map((item, idx) => `
       <div class="cart-item">
-        <div class="cart-item-img" style="background:${item.bg}"></div>
+        ${item.img ? `<img class="cart-item-img" src="${item.img}" style="object-fit:cover;" alt="${item.name}">` : `<div class="cart-item-img" style="background:${item.bg}"></div>`}
         <div>
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-meta">${item.category} · ${item.size.replace('x', '×')} · ${item.color}</div>
@@ -2352,9 +2509,10 @@ function toggleMobileNav() {
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   initMarquee();
-  renderFeatured();
   initInstaGrid();
   updateCartUI();
+  // Load products from CMS .md files, then render
+  loadProducts();
 });
 </script>
 </body>
