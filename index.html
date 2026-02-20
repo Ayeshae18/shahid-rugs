@@ -2101,7 +2101,7 @@ function mdToProduct(slug, data, idx) {
     badge:    data.badge       || '',
     desc:     data.description || '',
     prices: { '5x8': data.price_5x8||0, '8x10': data.price_8x10||0, '9x12': data.price_9x12||0, 'custom': 0 },
-    gallery:  gallery.map(g => typeof g === 'object' ? g.image : g).filter(Boolean),
+    gallery:  gallery.map(g => { let src = typeof g === 'object' ? g.image : g; if(src && src.startsWith('/')) src = 'https://raw.githubusercontent.com/Ayeshae18/shahid-rugs/main' + src; return src; }).filter(Boolean),
     colors:   colors.map(c => ({ name: c.name||'', hex: c.hex||'#5C3D2E', imgIdx: c.image_index||0 })),
     featured: data.featured || false,
     bg: FALLBACK_BG[slug] || 'linear-gradient(135deg,#C9A96E,#5C3D2E)'
